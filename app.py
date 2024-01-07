@@ -3,13 +3,14 @@ import tiktoken
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
-from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.embeddings import OpenAIEmbeddings,CohereEmbeddings
 #from langchain.embeddings import HuggingFaceInstructEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain.memory import ConversationBufferMemory 
 from langchain.chains import ConversationalRetrievalChain
 from langchain_community.chat_models import ChatOpenAI
 from htmlTemplate import css, user_template, bot_template
+from langchain_community.llms import HuggingFaceHub,Cohere
 
 
 def get_pdf_text(pdf_docs):
@@ -31,13 +32,18 @@ def get_text_chunks(text):
     chunks = text_splitter.split_text(text)
     return chunks
 def get_vectorstore(text_chunks):
-    embeddings = OpenAIEmbeddings()
+    #embeddings = OpenAIEmbeddings()
+    
+    embeddings = CohereEmbeddings(model="embed-english-light-v3.0")
+
     # embeddings = HuggingFaceInstructEmbeddings(model_name="hkunlp/instructor-xl")
     vectorstore = FAISS.from_texts(texts=text_chunks,embedding=embeddings)
     return vectorstore
 
 def get_conversation_chain(vectorstore):
-    llm = ChatOpenAI()
+    #llm = ChatOpenAI()
+    llm=Cohere(model="command", max_tokens=556, temperature=0.6)
+    #llm = HuggingFaceHub(repo_id="google/flan-t5-xxl",model_kwargs={"temperature":0.6,"max_length":512})
     memory = ConversationBufferMemory(memory_key='chat_history',return_messages=True)
     conversation_chain =ConversationalRetrievalChain.from_llm(
         llm=llm,

@@ -8,3 +8,5 @@ pypdf2
 tiktoken
 sentence_transformers
 InstructorEmbedding
+huggingface_hub
+cohere
