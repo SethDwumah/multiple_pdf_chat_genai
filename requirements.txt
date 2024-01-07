@@ -1,0 +1,10 @@
+openai
+langchain-community
+pinecone
+streamlit
+python-dotenv 
+faiss-cpu 
+pypdf2
+tiktoken
+sentence_transformers
+InstructorEmbedding
