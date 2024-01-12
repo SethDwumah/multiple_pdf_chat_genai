@@ -3,14 +3,15 @@ import tiktoken
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
-from langchain_community.embeddings import OpenAIEmbeddings,CohereEmbeddings
+from langchain_community.embeddings import CohereEmbeddings
 #from langchain.embeddings import HuggingFaceInstructEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain.memory import ConversationBufferMemory 
 from langchain.chains import ConversationalRetrievalChain
 from langchain_community.chat_models import ChatOpenAI
 from htmlTemplate import css, user_template, bot_template
-from langchain_community.llms import HuggingFaceHub,Cohere
+from langchain_community.llms import Cohere
+
 
 
 def get_pdf_text(pdf_docs):
