@@ -35,7 +35,7 @@ def get_text_chunks(text):
 def get_vectorstore(text_chunks):
     #embeddings = OpenAIEmbeddings()
     
-    embeddings = CohereEmbeddings(model="embed-english-light-v3.0")
+    embeddings = CohereEmbeddings(model="embed-english-light-v3.0",cohere_api_key='KLxxk4D5YgzHbisanSwQe5nWIBCuLIUC6gCbxAyF')
 
     # embeddings = HuggingFaceInstructEmbeddings(model_name="hkunlp/instructor-xl")
     vectorstore = FAISS.from_texts(texts=text_chunks,embedding=embeddings)
@@ -43,7 +43,7 @@ def get_vectorstore(text_chunks):
 
 def get_conversation_chain(vectorstore):
     #llm = ChatOpenAI()
-    llm=Cohere(model="command", max_tokens=556, temperature=0.6)
+    llm=Cohere(model="command", max_tokens=556, temperature=0.6,cohere_api_key='KLxxk4D5YgzHbisanSwQe5nWIBCuLIUC6gCbxAyF')
     #llm = HuggingFaceHub(repo_id="google/flan-t5-xxl",model_kwargs={"temperature":0.6,"max_length":512})
     memory = ConversationBufferMemory(memory_key='chat_history',return_messages=True)
     conversation_chain =ConversationalRetrievalChain.from_llm(
