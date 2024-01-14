@@ -8,7 +8,7 @@ from langchain_community.embeddings import CohereEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain.memory import ConversationBufferMemory 
 from langchain.chains import ConversationalRetrievalChain
-from langchain_community.chat_models import ChatOpenAI
+from langchain_community.chat_models import ChatCohere
 from htmlTemplate import css, user_template, bot_template
 from langchain_community.llms import Cohere
 
@@ -43,7 +43,7 @@ def get_vectorstore(text_chunks):
 
 def get_conversation_chain(vectorstore):
     #llm = ChatOpenAI()
-    llm=Cohere(model="command", max_tokens=556, temperature=0.6,cohere_api_key='KLxxk4D5YgzHbisanSwQe5nWIBCuLIUC6gCbxAyF')
+    llm=ChatCohere(model="command", max_tokens=556, temperature=0.6,cohere_api_key='KLxxk4D5YgzHbisanSwQe5nWIBCuLIUC6gCbxAyF')
     #llm = HuggingFaceHub(repo_id="google/flan-t5-xxl",model_kwargs={"temperature":0.6,"max_length":512})
     memory = ConversationBufferMemory(memory_key='chat_history',return_messages=True)
     conversation_chain =ConversationalRetrievalChain.from_llm(
