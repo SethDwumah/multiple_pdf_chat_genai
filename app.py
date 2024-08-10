@@ -2,11 +2,10 @@ import streamlit as st
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
-from langchain_community.embeddings import CohereEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
-from langchain_community.chat_models import ChatCohere
+from langchain_cohere import ChatCohere,CohereEmbeddings
 from htmlTemplate import css, user_template, bot_template
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 
@@ -49,7 +48,7 @@ def get_vectorstore(text_chunks):
 # Function to create a conversation chain
 def get_conversation_chain(vectorstore):
     llm = ChatCohere(model="command-r", max_tokens=556, temperature=0.6, cohere_api_key=COHERE_API_KEY)
-    #llm = ChatGoogleGenerativeAI(model="gemini",max_output_tokens=564,temperature=0.6,google_api_key= "AIzaSyBGbRBj8BTvbjcl1q88U2b_9bkIwRM_xSY")
+    #llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash",max_output_tokens=564,temperature=0.6,google_api_key= "AIzaSyBGbRBj8BTvbjcl1q88U2b_9bkIwRM_xSY")
     memory = ConversationBufferMemory(memory_key='chat_history', return_messages=True)
     conversation_chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
@@ -61,14 +60,24 @@ def get_conversation_chain(vectorstore):
 
 # Function to handle user input and generate responses
 def handle_userinput(user_question):
-    response = st.session_state.conversation({'question': user_question})
-    st.session_state.chat_history = response['chat_history']
+    if st.session_state.conversation is None:
+        st.error("Conversation is not initialized.")
+        return
 
-    for i, message in enumerate(st.session_state.chat_history):
-        if i % 2 == 0:
-            st.write(user_template.replace("{{MSG}}", message.content), unsafe_allow_html=True)
+    try:
+        response = st.session_state.conversation.invoke({'question': user_question})
+        if response is not None:
+            st.session_state.chat_history = response.get('chat_history', [])
+            for i, message in enumerate(st.session_state.chat_history):
+                if i % 2 == 0:
+                    st.write(user_template.replace("{{MSG}}", message.content), unsafe_allow_html=True)
+                else:
+                    st.write(bot_template.replace("{{MSG}}", message.content), unsafe_allow_html=True)
         else:
-            st.write(bot_template.replace("{{MSG}}", message.content), unsafe_allow_html=True)
+            st.error("No response received from the conversation chain.")
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
+
 
 # Main function to run the Streamlit app
 def main():
