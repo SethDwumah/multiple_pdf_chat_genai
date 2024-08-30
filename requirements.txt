@@ -1,8 +1,10 @@
 langchain
 langchain-community
+langchain-core
 streamlit
 python-dotenv 
 faiss-cpu 
 pypdf2
 tiktoken
 cohere
+langchain_cohere

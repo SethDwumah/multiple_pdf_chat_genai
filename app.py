@@ -47,7 +47,7 @@ def get_vectorstore(text_chunks):
 
 # Function to create a conversation chain
 def get_conversation_chain(vectorstore):
-    llm = ChatCohere(model="command-r", max_tokens=556, temperature=0.6, cohere_api_key=COHERE_API_KEY)
+    llm = ChatCohere(model="command-r", max_tokens=800, temperature=0.3, cohere_api_key=COHERE_API_KEY)
     #llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash",max_output_tokens=564,temperature=0.6,google_api_key= "AIzaSyBGbRBj8BTvbjcl1q88U2b_9bkIwRM_xSY")
     memory = ConversationBufferMemory(memory_key='chat_history', return_messages=True)
     conversation_chain = ConversationalRetrievalChain.from_llm(
@@ -91,7 +91,7 @@ def main():
         st.session_state.chat_history = None
 
     st.header("Chat with multiple PDFs :books:")
-    user_question = st.text_input("Ask a question about documents:")
+    user_question = st.chat_input("Ask a question about documents:")
 
     if user_question:
         handle_userinput(user_question)
