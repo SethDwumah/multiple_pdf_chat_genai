@@ -8,3 +8,4 @@ pypdf2
 tiktoken
 cohere
 langchain_cohere
+langchain_google_genai
