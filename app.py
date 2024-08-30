@@ -7,14 +7,14 @@ from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 from langchain_cohere import ChatCohere,CohereEmbeddings
 from htmlTemplate import css, user_template, bot_template
-from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
+#from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 
 import os, getpass
 
 
 # Define the API key directly
 
-GOOGLE_API_KEY= "AIzaSyBGbRBj8BTvbjcl1q88U2b_9bkIwRM_xSY"
+#GOOGLE_API_KEY= "AIzaSyBGbRBj8BTvbjcl1q88U2b_9bkIwRM_xSY"
 
 COHERE_API_KEY = 'BrfGKg2jyraO29bD1iaKqKD3i60cdDcZ7e0mBbCu'
 
@@ -40,14 +40,14 @@ def get_text_chunks(text):
 
 # Function to create a vector store from text chunks
 def get_vectorstore(text_chunks):
-    #embeddings = CohereEmbeddings(model="embed-english-light-v3.0", cohere_api_key=COHERE_API_KEY)
-    embeddings = embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001",google_api_key="AIzaSyBGbRBj8BTvbjcl1q88U2b_9bkIwRM_xSY")
+    embeddings = CohereEmbeddings(model="embed-english-light-v3.0", cohere_api_key=COHERE_API_KEY)
+    #embeddings = embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001",google_api_key="AIzaSyBGbRBj8BTvbjcl1q88U2b_9bkIwRM_xSY")
     vectorstore = FAISS.from_texts(texts=text_chunks, embedding=embeddings)
     return vectorstore
 
 # Function to create a conversation chain
 def get_conversation_chain(vectorstore):
-    llm = ChatCohere(model="command-r", max_tokens=800, temperature=0.3, cohere_api_key=COHERE_API_KEY)
+    llm = ChatCohere(model="command-r", max_tokens=800, temperature=0.5, cohere_api_key=COHERE_API_KEY)
     #llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash",max_output_tokens=564,temperature=0.6,google_api_key= "AIzaSyBGbRBj8BTvbjcl1q88U2b_9bkIwRM_xSY")
     memory = ConversationBufferMemory(memory_key='chat_history', return_messages=True)
     conversation_chain = ConversationalRetrievalChain.from_llm(
