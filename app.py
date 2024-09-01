@@ -7,7 +7,7 @@ from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 from langchain_cohere import ChatCohere,CohereEmbeddings
 from htmlTemplate import css, user_template, bot_template
-from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
+#from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 
 import os, getpass
 
@@ -40,8 +40,8 @@ def get_text_chunks(text):
 
 # Function to create a vector store from text chunks
 def get_vectorstore(text_chunks):
-    #embeddings = CohereEmbeddings(model="embed-english-v3.0", cohere_api_key=COHERE_API_KEY)
-    embeddings = embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001",google_api_key="AIzaSyBGbRBj8BTvbjcl1q88U2b_9bkIwRM_xSY")
+    embeddings = CohereEmbeddings(model="embed-english-v3.0", cohere_api_key=COHERE_API_KEY)
+    #embeddings = embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001",google_api_key="AIzaSyBGbRBj8BTvbjcl1q88U2b_9bkIwRM_xSY")
     vectorstore = FAISS.from_texts(texts=text_chunks, embedding=embeddings)
     return vectorstore
 
